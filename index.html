@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Management Dashboard</title>
+  <style>
+    body { font-family: Arial; margin: 20px; background: #f9f9f9; }
+    header { text-align: center; margin-bottom: 20px; color: #333; }
+    h1 { margin: 0; }
+    table { border-collapse: collapse; width: 100%; background: #fff; }
+    th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+    th { background-color: #4CAF50; color: white; }
+    tr:hover { background-color: #f1f1f1; }
+    button { padding: 5px 10px; margin: 2px; cursor: pointer; border: none; border-radius: 4px; }
+    .add-btn { background-color: #4CAF50; color: white; }
+    .edit-btn { background-color: #2196F3; color: white; }
+    .delete-btn { background-color: #f44336; color: white; }
+    .controls { margin-bottom: 15px; text-align: right; }
+    input { padding: 5px; width: 200px; border-radius: 4px; border: 1px solid #ccc; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Student Management Dashboard</h1>
+  </header>
+
+  <div class="controls">
+    <input type="text" id="search" placeholder="Search student...">
+    <button id="addStudentBtn" class="add-btn">Add Student</button>
+  </div>
+
+  <table id="studentTable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Roll No</th>
+        <th>Class</th>
+        <th>Age</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- JS will populate -->
+    </tbody>
+  </table>
+
+  <script>
+    let students = [
+      {name:"TAMIL", roll:"102", class:"AI&DS", age:20},
+      {name:"ARUVI", roll:"201", class:"CSE", age:21},
+      {name:"VEERA",roll:"103",class:"AI&DS",age:20},
+      {name:"HARINI",roll:"101",class:"AI&DS",age:20},
+      {name:"SATHYA",roll:"202",class:"AI&DS",age:21},
+      {name:"SIVA",roll:"203",class:"CSE",age:21},
+    ];
+
+    function displayStudents(list = students) {
+      const tableBody = document.querySelector("#studentTable tbody");
+      tableBody.innerHTML = "";
+      list.forEach((student, index) => {
+        tableBody.innerHTML += `
+          <tr>
+            <td>${student.name}</td>
+            <td>${student.roll}</td>
+            <td>${student.class}</td>
+            <td>${student.age}</td>
+            <td>
+              <button class="edit-btn" onclick="editStudent(${index})">Edit</button>
+              <button class="delete-btn" onclick="deleteStudent(${index})">Delete</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function addStudent() {
+      let name = prompt("Enter Name:");
+      let roll = prompt("Enter Roll No:");
+      let cls = prompt("Enter Class:");
+      let age = prompt("Enter Age:");
+      if(name && roll && cls && age) {
+        students.push({name, roll, class: cls, age: parseInt(age)});
+        displayStudents();
+      }
+    }
+
+    function editStudent(index) {
+      let student = students[index];
+      let name = prompt("Edit Name:", student.name);
+      let roll = prompt("Edit Roll No:", student.roll);
+      let cls = prompt("Edit Class:", student.class);
+      let age = prompt("Edit Age:", student.age);
+      if(name && roll && cls && age) {
+        students[index] = {name, roll, class: cls, age: parseInt(age)};
+        displayStudents();
+      }
+    }
+
+    function deleteStudent(index) {
+      if(confirm("Are you sure want to delete?")) {
+        students.splice(index, 1);
+        displayStudents();
+      }
+    }
+
+    document.querySelector("#addStudentBtn").addEventListener("click", addStudent);
+
+    document.querySelector("#search").addEventListener("input", (e) => {
+      const value = e.target.value.toLowerCase();
+      const filtered = students.filter(s => s.name.toLowerCase().includes(value) || s.class.toLowerCase().includes(value));
+      displayStudents(filtered);
+    });
+
+    displayStudents();
+  </script>
+
+</body>
+</html>
